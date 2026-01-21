@@ -544,7 +544,8 @@ def decompose_to_smiles(mol: Chem.Mol,
 def find_similar_fragments(query_smiles: str, 
                            fragments_file: str,
                            similarity_threshold: float = 0.3,
-                           top_n: int = 50) -> List[Tuple[str, float, int]]:
+                           top_n: int = 50,
+                           progress_callback=None) -> List[Tuple[str, float, int]]:
     """
     Find fragments similar to a query SMILES with the same number of attachment points.
     
@@ -557,6 +558,7 @@ def find_similar_fragments(query_smiles: str,
         fragments_file: Path to file containing fragment SMILES (one per line)
         similarity_threshold: Minimum Tanimoto similarity (0-1)
         top_n: Maximum number of results to return
+        progress_callback: Optional callback function to report progress (0.0 to 1.0)
     
     Returns:
         List of tuples: (smiles, similarity_score, num_attachments)
@@ -697,6 +699,16 @@ def find_similar_fragments(query_smiles: str,
     similar_fragments = []
     seen_canonical_smiles = set()
     
+    # Count total lines for progress tracking
+    total_lines = 0
+    if progress_callback:
+        if fragments_file.endswith('.gz'):
+            with gzip.open(fragments_file, 'rt', encoding='utf-8') as f_count:
+                total_lines = sum(1 for line in f_count if line.strip())
+        else:
+            with open(fragments_file, 'r') as f_count:
+                total_lines = sum(1 for line in f_count if line.strip())
+    
     # Support both .gz and plain text files
     if fragments_file.endswith('.gz'):
         f = gzip.open(fragments_file, 'rt', encoding='utf-8')
@@ -704,7 +716,12 @@ def find_similar_fragments(query_smiles: str,
         f = open(fragments_file, 'r')
     
     try:
+        line_num = 0
         for line in f:
+            line_num += 1
+            if progress_callback and total_lines > 0 and line_num % 1000 == 0:
+                progress_callback(line_num / total_lines)
+            
             line = line.strip()
             if not line:
                 continue
@@ -1148,15 +1165,32 @@ if smiles_input:
             # Replace button
             st.markdown("")
             if st.button("🔄 Replace", type="primary", width='stretch'):
-                with st.spinner("Searching for similar fragments..."):
+                # Create progress bar
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                def update_progress(progress):
+                    progress_bar.progress(progress)
+                    status_text.text(f"Searching similar fragments... {int(progress * 100)}% complete")
+                
+                try:
                     similar = find_similar_fragments(
                         selected_frag['wildcard_smiles'],
                         "data/fragments_cleaned_whole_filtered_chembl_with_smiles.txt.gz",
                         similarity_threshold=0.2,
-                        top_n=100
+                        top_n=100,
+                        progress_callback=update_progress
                     )
+                    progress_bar.progress(100)
+                    status_text.text("Search complete!")
                     st.session_state.similar_fragments = similar
                     st.session_state.last_selected_for_replace = selected
+                finally:
+                    # Clean up progress indicators after a brief delay
+                    import time
+                    time.sleep(0.5)
+                    progress_bar.empty()
+                    status_text.empty()
             
             # Reset similar fragments if selected fragment changed
             if st.session_state.last_selected_for_replace is not None and st.session_state.last_selected_for_replace != selected:
