@@ -1,0 +1,132 @@
+# 💧 Morpheus
+
+**A bioisostere and R-group replacement tool for drug discovery**
+
+Morpheus is an interactive web application for molecular decomposition, fragment replacement, and retrosynthetic analysis. It helps medicinal chemists explore chemical space by replacing molecular fragments with bioisosteres and evaluating the resulting compounds.
+
+## Features
+
+### 🧩 Molecule Decomposition
+- Input molecules via SMILES string or draw using the built-in Ketcher editor
+- Automatically decomposes molecules into ring and non-ring fragments
+- Visualizes fragments with 2D structures
+
+### 🔄 Bioisostere Replacement
+- Select any fragment for replacement
+- Search for similar fragments from a curated database of ChEMBL-derived fragments
+- Filter replacements by Tanimoto similarity threshold
+- Generate new molecules by substituting the selected fragment
+
+### 📊 Property Filtering
+- Filter generated molecules by:
+  - Molecular Weight (MW)
+  - H-Bond Donors/Acceptors (HBD/HBA)
+  - Topological Polar Surface Area (TPSA)
+  - cLogP
+  - Synthetic Accessibility (SA) Score
+  - QED Drug-likeness Score
+  - Tanimoto Similarity to parent molecule
+
+### ⚠️ Structural Alerts
+- Automatically flags undesirable substructures (PAINS, reactive groups, etc.)
+- Highlights potential liabilities in generated molecules
+
+### 🧪 Retrosynthetic Planning
+- Analyze synthetic routes for selected molecules using SynPlanner
+- Visualizes retrosynthetic trees with building block identification
+- Labels commercial building blocks with their IDs
+
+### 🔬 3D Structure Visualization
+- View molecules in 3D with py3Dmol
+- Load and visualize PDB structures with ligands
+- Align generated molecules to reference ligands
+
+## Installation
+
+### Prerequisites
+- Python 3.9+
+- Conda (recommended) or pip
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/morpheus.git
+   cd morpheus
+   ```
+
+2. **Create a conda environment (recommended):**
+   ```bash
+   conda create -n morpheus python=3.11
+   conda activate morpheus
+   ```
+
+3. **Install RDKit:**
+   ```bash
+   conda install -c conda-forge rdkit
+   ```
+
+4. **Install other dependencies:**
+   ```bash
+   pip install streamlit streamlit-ketcher mols2grid py3Dmol pandas
+   ```
+
+5. **Install SynPlanner (optional, for retrosynthetic planning):**
+   ```bash
+   pip install synplan CGRtools
+   ```
+
+6. **Decompress data files:**
+   The compressed data files (`.gz`) will be automatically decompressed on first run.
+   Alternatively, manually decompress them:
+   ```bash
+   gunzip data/*.gz
+   ```
+
+## Running the App
+
+1. **Activate your environment:**
+   ```bash
+   conda activate morpheus
+   ```
+
+2. **Run Streamlit:**
+   ```bash
+   streamlit run morpheus.py
+   ```
+
+3. **Open in browser:**
+   The app will automatically open at `http://localhost:8501`
+
+## Data Files
+
+The `data/` folder contains:
+- **Fragment databases** derived from ChEMBL for bioisostere replacement
+- **Building blocks** with IDs for retrosynthetic planning
+
+Large files are stored compressed (`.gz`) and decompressed on first run.
+
+The `synplan_data/` folder (auto-downloaded on first use of retrosynthesis):
+- Reaction rules and policy networks for SynPlanner
+- Building block databases (~1GB total, downloaded automatically)
+
+## Usage
+
+1. **Enter a molecule**: Type a SMILES string or draw a molecule using the Ketcher editor
+2. **View fragments**: The molecule is automatically decomposed into fragments
+3. **Select a fragment**: Click on any fragment to select it for replacement
+4. **Find replacements**: Adjust similarity threshold and view potential bioisosteres
+5. **Generate molecules**: New molecules are created by replacing the selected fragment
+6. **Filter & analyze**: Use property sliders to filter results, check for structural alerts
+7. **Plan synthesis**: Select promising molecules for retrosynthetic analysis
+
+## License
+
+MIT License
+
+## Acknowledgments
+
+- [RDKit](https://www.rdkit.org/) - Cheminformatics toolkit
+- [Streamlit](https://streamlit.io/) - Web app framework
+- [SynPlanner](https://github.com/Laboratoire-de-Chemoinformatique/SynPlanner) - Retrosynthetic planning
+- [ChEMBL](https://www.ebi.ac.uk/chembl/) - Source of fragment data
