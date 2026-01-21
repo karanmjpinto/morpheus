@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Large SynPlanner data files (downloaded automatically on first run)
+# These files are too large for GitHub (>50MB) and will be auto-downloaded
+synplan_data/tutorial/ranking_policy_training/ranking_policy_network.ckpt
+synplan_data/tutorial/ranking_policy_training/ranking_policy_dataset.pt
+synplan_data/building_blocks/building_blocks_em_sa_ln.sdf
+synplan_data/uspto/uspto_standardized.smi
+synplan_data/uspto/weights/ranking_policy_network.ckpt
+synplan_data/uspto/weights/filtering_policy_network.ckpt
+synplan_data/uspto/uspto_standardized.zip
+synplan_data/chembl/molecules_for_filtering_policy_training.smi
+
+# Large data files (compressed versions .gz are committed instead)
+data/filtered_chembl_activities.csv
+data/building_blocks_em_sa_ln_with_ids.sdf
+data/whole_filtered_chembl_with_smiles.csv
