@@ -2,7 +2,7 @@
 
 **A bioisostere and R-group replacement tool for drug discovery**
 
-Morpheus is an interactive web application for molecular decomposition, fragment replacement, and retrosynthetic analysis. It helps medicinal chemists explore chemical space by replacing molecular fragments with bioisosteres and evaluating the resulting compounds.
+Morpheus is an interactive web application for molecular decomposition, fragment replacement, and retrosynthetic analysis. It helps medicinal & computational chemists explore chemical space by replacing scaffold or R-group fragments with bioisosteres and evaluating the resulting compounds.
 
 ## Features
 
