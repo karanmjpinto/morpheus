@@ -9,7 +9,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 from rdkit import Chem
 from rdkit.Chem import Draw, rdDepictor, AllChem, rdFingerprintGenerator, QED, Descriptors, Crippen, rdDistGeom, rdFMCS
-from rdkit.Contrib.SA_Score import sascorer
+from sa_score import sascorer
 from rdkit import DataStructs, RDLogger
 from typing import List, Dict, Set, Tuple
 from itertools import permutations
